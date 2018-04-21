@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto"
+
+package api;
+
+service Grubenlampe {
+    rpc AddUser(AddUserRequest) returns (GenericResponse) {}
+    rpc AddOrg(AddOrgRequest) returns (GenericResponse) {}
+    rpc AddASN(AddASNRequest) returns (GenericResponse) {}
+    rpc AddTunnel(AddTunnelRequest) returns (GenericResponse) {}
+    rpc DeleteTunnel(DeleteTunnelRequest) returns (GenericResponse) {}
+    rpc AddIPv4Address(AddIPv4AddressRequest) returns (AddIPv4AddressResponse) {}
+    rpc ReleaseIPv4Address(ReleaseIPv4AddressRequest) returns (GenericResponse) {}
+    rpc AddIPv6Prefix(AddIPv6PrefixRequest) returns (AddIPv6PrefixReply) {}
+    rpc ReleaseIPv6Prefix(ReleaseIPv6PrefixRequest) returns (GenericResponse) {}
+    rpc GetBGPStatus(GetBGPStatusRequest) returns (GetBGPStatusReply) {}
+    rpc GetLogs(GetLogsRequest) returns (GetLogsReply) {}
+}
+
+message GenericRequest {
+}
+
+message GenericResponse {
+     bool success = 1;
+     string message = 2;
+}
+
+message AddUserRequest {
+    string email = 1;
+    string password = 2;
+    string ripe_handle = 3;
+}
+
+message AddOrgRequest {
+    string name = 1;
+    string short_name = 2;
+    uint32 asn = 3;
+}
+
+message AddASNRequest {
+    string org_short_name = 1;
+    uint32 asn = 2;
+}
+
+message AddTunnelRequest {
+    string address = 1;
+    uint32 asn = 2;
+}
+
+message DeleteTunnelRequest {
+    string address = 1;
+}
+
+message AddIPv4AddressRequest {
+    string org_short_name = 1;
+}
+
+message AddIPv4AddressResponse {
+    bool success = 1;
+    string message = 2;
+    string address = 3;
+}
+
+message ReleaseIPv4AddressRequest {
+    string address = 1;
+}
+
+message AddIPv6PrefixRequest {
+    string org_short_name = 1;
+}
+
+message AddIPv6PrefixReply {
+    bool success = 1;
+    string message = 2;
+    string prefix = 3;
+}
+
+message ReleaseIPv6PrefixRequest {
+    string address = 1;
+}
+
+message GetBGPStatusRequest {
+    uint32 asn = 1;
+}
+
+message GetBGPStatusReply {
+    bool success = 1;
+    string mesage = 2;
+    repeated BGPStatus = 3;
+}
+
+message BGPStatus {
+    string address = 1;
+    uint32 asn = 2;
+    int state = 3;
+}
+
+message GetLogsRequest {
+    string org_short_name = 1;
+}
+
+message GetLogsReply {
+    repeated Log logs = 1;
+}
+
+message Log {
+    string user = 1;
+    string org_short_name = 2;
+    string request = 3;
+    string response = 4;
+    google.protobuf.Timestamp time = 5;
+}
