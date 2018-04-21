@@ -11,11 +11,10 @@ import (
 	// pb "github.com/ffrl/grubenlampe/api"
 
 	"github.com/ffrl/grubenlampe/database"
+	"github.com/ffrl/grubenlampe/server"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 )
 
 func init() {
@@ -46,11 +45,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	s := grpc.NewServer()
-	reflection.Register(s)
-
 	sigchan := make(chan os.Signal, 1)
 	signal.Notify(sigchan, syscall.SIGTERM, syscall.SIGINT)
+
+	s := server.New()
 
 	go func() {
 		log.Println("Starting GRPC server on", *listenAddress)
