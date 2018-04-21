@@ -1,9 +1,10 @@
 package database
 
+import "github.com/jinzhu/gorm"
+
 // ASN is an autonomous system number
 type ASN struct {
-	// ID identifies an autonomous system
-	ID int
+	gorm.Model
 
 	// ASN is the number identifying the autonomous system
 	ASN uint32

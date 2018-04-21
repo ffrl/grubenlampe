@@ -1,9 +1,10 @@
 package database
 
+import "github.com/jinzhu/gorm"
+
 // User is an user account permited to use the API
 type User struct {
-	// ID identifies an user
-	ID int
+	gorm.Model
 
 	// Email identifies the user in API communications
 	Email string
@@ -15,5 +16,8 @@ type User struct {
 	SuperUser bool
 
 	// RIPEHandle is the reference in RIPE database
-	RIPEHandle string
+	RIPEHandle string `gorm:"column:ripe_handle"`
+
+	// Orgs is the list of organisations an user is assinged to
+	Orgs []*Org `gorm:"many2many:user_org;"`
 }

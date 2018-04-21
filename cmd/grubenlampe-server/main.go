@@ -9,9 +9,8 @@ import (
 	"syscall"
 
 	// pb "github.com/ffrl/grubenlampe/api"
-	// "github.com/ffrl/grubenlampe/database"
 
-	"github.com/jinzhu/gorm"
+	"github.com/ffrl/grubenlampe/database"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -36,14 +35,11 @@ func main() {
 		*dsn = envDSN
 	}
 
-	db, err := gorm.Open(*driver, *dsn)
+	db, err := initDatabase(*driver, *dsn, *verbose)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if *verbose {
-		db.LogMode(true)
-	}
-	db.AutoMigrate()
+	defer db.Close()
 
 	lis, err := net.Listen("tcp", *listenAddress)
 	if err != nil {
@@ -74,4 +70,14 @@ func main() {
 		log.Fatal(err)
 	}
 	os.Exit(0)
+}
+
+func initDatabase(driver, dsn string, debug bool) (*database.Connection, error) {
+	opts := []database.Option{}
+
+	if debug {
+		opts = append(opts, database.WithDebug())
+	}
+
+	return database.Connect(driver, dsn, opts...)
 }
