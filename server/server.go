@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 
 	pb "github.com/ffrl/grubenlampe/api"
 	"github.com/ffrl/grubenlampe/database"
@@ -10,11 +11,12 @@ import (
 )
 
 type Server struct {
+	db *database.Connection
 }
 
 // New creates a new API server instance
 func New(db *database.Connection) *grpc.Server {
-	a := &Server{}
+	a := &Server{db}
 	auth := auth{db}
 	s := grpc.NewServer(grpc.StreamInterceptor(auth.streamInterceptor), grpc.UnaryInterceptor(auth.unaryInterceptor))
 	pb.RegisterGrubenlampeServer(s, a)
@@ -22,8 +24,27 @@ func New(db *database.Connection) *grpc.Server {
 	return s
 }
 
-func (s *Server) AddUser(context.Context, *pb.AddUserRequest) (*pb.GenericResponse, error) {
-	return nil, nil
+// AddUser creates a user
+func (s *Server) AddUser(ctx context.Context, req *pb.AddUserRequest) (*pb.GenericResponse, error) {
+	exists, err := s.db.Users().EmailExists(req.Email)
+	if err != nil {
+		return nil, fmt.Errorf("error while processing")
+	}
+	if exists {
+		return &pb.GenericResponse{Message: "User already exists"}, nil
+	}
+
+	u := &database.User{
+		Email:      req.Email,
+		Password:   req.Password,
+		RIPEHandle: req.RipeHandle,
+	}
+	err = s.db.Users().Save(u)
+	if err != nil {
+		return nil, fmt.Errorf("could not store user")
+	}
+
+	return &pb.GenericResponse{Success: true}, nil
 }
 
 func (s *Server) AddOrg(context.Context, *pb.AddOrgRequest) (*pb.GenericResponse, error) {
