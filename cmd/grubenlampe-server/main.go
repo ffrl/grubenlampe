@@ -23,7 +23,8 @@ func init() {
 
 func main() {
 	var (
-		listenAddress = flag.String("listen", ":20170", "GRPC listener host:port")
+		verbose       = flag.Bool("verbose", false, "Enable verbose logging")
+		listenAddress = flag.String("listen", "[::1]:20170", "GRPC listener host:port")
 		driver        = flag.String("db", "sqlite3", "Database driver (sqlite3, mysql or postgres)")
 		dsn           = flag.String("dsn", "grubenlampe.db", "Database DSN (GRUBENLAMPE_DSN)")
 	)
@@ -36,6 +37,9 @@ func main() {
 	db, err := gorm.Open(*driver, *dsn)
 	if err != nil {
 		log.Fatal(err)
+	}
+	if *verbose {
+		db.LogMode(true)
 	}
 	db.AutoMigrate()
 
