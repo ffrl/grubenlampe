@@ -5,6 +5,8 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/signal"
+	"syscall"
 
 	// pb "github.com/ffrl/grubenlampe/api"
 	// "github.com/ffrl/grubenlampe/database"
@@ -50,8 +52,26 @@ func main() {
 
 	s := grpc.NewServer()
 	reflection.Register(s)
-	err = s.Serve(lis)
+
+	sigchan := make(chan os.Signal, 1)
+	signal.Notify(sigchan, syscall.SIGTERM, syscall.SIGINT)
+
+	go func() {
+		log.Println("Starting GRPC server on", *listenAddress)
+		err := s.Serve(lis)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	select {
+	case sig := <-sigchan:
+		log.Printf("Received %v, terminating", sig)
+	}
+	s.GracefulStop()
+	err = db.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
+	os.Exit(0)
 }
