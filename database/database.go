@@ -51,3 +51,28 @@ func (c *Connection) autoMigrate() {
 func (c *Connection) Close() error {
 	return c.db.Close()
 }
+
+// ASNs returns access to the ASN entity
+func (c *Connection) ASNs() *ASNDataAccess {
+	return &ASNDataAccess{c}
+}
+
+// Logs returns access to the Logs entity
+func (c *Connection) Logs() *LogDataAccess {
+	return &LogDataAccess{c}
+}
+
+// Orgs returns access to the Org entity
+func (c *Connection) Orgs() *OrgDataAccess {
+	return &OrgDataAccess{c}
+}
+
+// Tunnels returns access to the Tunnel entity
+func (c *Connection) Tunnels() *TunnelDataAccess {
+	return &TunnelDataAccess{c}
+}
+
+// Users returns access to the User entity
+func (c *Connection) Users() *UserDataAccess {
+	return &UserDataAccess{c}
+}
