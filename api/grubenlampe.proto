@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "google/protobuf/timestamp.proto"
+import "google/protobuf/timestamp.proto";
 
 package api;
 
@@ -87,13 +87,13 @@ message GetBGPStatusRequest {
 message GetBGPStatusReply {
     bool success = 1;
     string mesage = 2;
-    repeated BGPStatus = 3;
+    repeated BGPStatus bgp_status = 3;
 }
 
 message BGPStatus {
     string address = 1;
     uint32 asn = 2;
-    int state = 3;
+    uint32 state = 3;
 }
 
 message GetLogsRequest {
