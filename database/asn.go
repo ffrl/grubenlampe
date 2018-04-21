@@ -15,6 +15,6 @@ type ASN struct {
 	// Checked is the status of the ASN add request
 	Checked bool
 
-	// CheckedBy is the authorative User checked the add request
+	// CheckedBy is the authoritative User checked the add request
 	CheckedBy *User
 }

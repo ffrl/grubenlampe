@@ -18,7 +18,7 @@ type Org struct {
 	// Checked is the status of the organisation add request
 	Checked bool
 
-	// CheckedBy is the authorative user checked the add request
+	// CheckedBy is the authoritative user checked the add request
 	CheckedBy *User
 
 	// IPv4Quota is the max number of NAT-IPs an organisation can hold
