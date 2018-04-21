@@ -38,6 +38,7 @@ func (d *UserDataAccess) EmailExists(email string) (bool, error) {
 	return count > 0, nil
 }
 
+// GetByEmail retrieves an user by its email address
 func (d *UserDataAccess) GetByEmail(email string) (*User, error) {
 	u := &User{}
 	err := d.conn.db.First(&u, "email = ?", email).Error

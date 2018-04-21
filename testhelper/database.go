@@ -35,6 +35,10 @@ func ConnectTestDatabase(t *testing.T) *TestDatabaseScope {
 		t.Fatalf("could not add admin user. %s", err)
 	}
 
+	if err := s.addTestOrg(); err != nil {
+		t.Fatalf("could not add fftest org. %s", err)
+	}
+
 	return s
 }
 
@@ -54,6 +58,14 @@ func (s *TestDatabaseScope) addTestUserAdmin() error {
 		RIPEHandle: "admin1234",
 	}
 	return s.db.Users().Save(u)
+}
+
+func (s *TestDatabaseScope) addTestOrg() error {
+	o := &database.Org{
+		Name:      "Freifunk Test e.V.",
+		ShortName: "fftest",
+	}
+	return s.db.Orgs().Save(o)
 }
 
 func (s *TestDatabaseScope) Close() {

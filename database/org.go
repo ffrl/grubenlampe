@@ -6,6 +6,9 @@ import "github.com/jinzhu/gorm"
 type Org struct {
 	gorm.Model
 
+	// Name is the long name of the organisation
+	Name string
+
 	// Address is the address of the organisation
 	Address string
 

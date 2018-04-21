@@ -26,7 +26,8 @@ func New(db *database.Connection) *grpc.Server {
 
 // AddUser creates a user
 func (s *Server) AddUser(ctx context.Context, req *pb.AddUserRequest) (*pb.GenericResponse, error) {
-	exists, err := s.db.Users().EmailExists(req.Email)
+	users := s.db.Users()
+	exists, err := users.EmailExists(req.Email)
 	if err != nil {
 		return nil, fmt.Errorf("error while processing")
 	}
@@ -39,7 +40,7 @@ func (s *Server) AddUser(ctx context.Context, req *pb.AddUserRequest) (*pb.Gener
 		Password:   req.Password,
 		RIPEHandle: req.RipeHandle,
 	}
-	err = s.db.Users().Save(u)
+	err = users.Save(u)
 	if err != nil {
 		return nil, fmt.Errorf("could not store user")
 	}
@@ -47,8 +48,26 @@ func (s *Server) AddUser(ctx context.Context, req *pb.AddUserRequest) (*pb.Gener
 	return &pb.GenericResponse{Success: true}, nil
 }
 
-func (s *Server) AddOrg(context.Context, *pb.AddOrgRequest) (*pb.GenericResponse, error) {
-	return nil, nil
+func (s *Server) AddOrg(ctx context.Context, req *pb.AddOrgRequest) (*pb.GenericResponse, error) {
+	orgs := s.db.Orgs()
+	exists, err := orgs.ShortNameExists(req.ShortName)
+	if err != nil {
+		return nil, fmt.Errorf("error while processing")
+	}
+	if exists {
+		return &pb.GenericResponse{Message: "Org already exists"}, nil
+	}
+
+	o := &database.Org{
+		Name:      req.Name,
+		ShortName: req.ShortName,
+	}
+	err = orgs.Save(o)
+	if err != nil {
+		return nil, fmt.Errorf("could not store org")
+	}
+
+	return &pb.GenericResponse{Success: true}, nil
 }
 
 func (s *Server) AddASN(context.Context, *pb.AddASNRequest) (*pb.GenericResponse, error) {
