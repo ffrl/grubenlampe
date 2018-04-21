@@ -24,7 +24,7 @@ func init() {
 func main() {
 	var (
 		verbose       = flag.Bool("verbose", false, "Enable verbose logging")
-		listenAddress = flag.String("listen", "[::1]:20170", "GRPC listener host:port")
+		listenAddress = flag.String("listen", "[::1]:20170", "gRPC listener host:port")
 		driver        = flag.String("db", "sqlite3", "Database driver (sqlite3, mysql or postgres)")
 		dsn           = flag.String("dsn", "grubenlampe.db", "Database DSN (GRUBENLAMPE_DSN)")
 	)
@@ -48,7 +48,7 @@ func main() {
 	sigchan := make(chan os.Signal, 1)
 	signal.Notify(sigchan, syscall.SIGTERM, syscall.SIGINT)
 
-	s := server.New()
+	s := grpc.NewServer(grpc.StreamInterceptor(streamInterceptor), grpc.UnaryInterceptor(unaryInterceptor))
 
 	go func() {
 		log.Println("Starting GRPC server on", *listenAddress)
