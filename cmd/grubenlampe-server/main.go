@@ -48,7 +48,7 @@ func main() {
 	sigchan := make(chan os.Signal, 1)
 	signal.Notify(sigchan, syscall.SIGTERM, syscall.SIGINT)
 
-	s := grpc.NewServer(grpc.StreamInterceptor(streamInterceptor), grpc.UnaryInterceptor(unaryInterceptor))
+	s := server.New(db)
 
 	go func() {
 		log.Println("Starting GRPC server on", *listenAddress)

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	pb "github.com/ffrl/grubenlampe/api"
+	"github.com/ffrl/grubenlampe/database"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -12,9 +13,10 @@ type Server struct {
 }
 
 // New creates a new API server instance
-func New() *grpc.Server {
+func New(db *database.Connection) *grpc.Server {
 	a := &Server{}
-	s := grpc.NewServer()
+	auth := auth{db}
+	s := grpc.NewServer(grpc.StreamInterceptor(auth.streamInterceptor), grpc.UnaryInterceptor(auth.unaryInterceptor))
 	pb.RegisterGrubenlampeServer(s, a)
 	reflection.Register(s)
 	return s
