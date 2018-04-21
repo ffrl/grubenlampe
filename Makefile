@@ -14,7 +14,6 @@ clean:
 	cd bin && rm *
 
 all:
-	cd bin && rm *
 	cd cmd/grubenlampe-server && go build -o ../../bin/grubenlamped
 	cd cmd/grubenlampe && go build -o ../../bin/grubenlampe
 
