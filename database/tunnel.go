@@ -11,4 +11,7 @@ type Tunnel struct {
 
 	// Address is the IP of the GRE endpoint (organisation site)
 	Address string
+
+	// Synced describes if a tunnel is synced to Netbox for provisioning
+	Synced bool
 }
