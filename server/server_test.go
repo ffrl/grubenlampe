@@ -38,15 +38,27 @@ func TestAddUser(t *testing.T) {
 		email     string
 		assertion func(*pb.GenericResponse, *database.Connection, error, *testing.T)
 	}{
-		{name: "should add user", email: "hans@wurst.de", assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
-			assertAddedUserExists(t, db, err)
-		}},
-		{name: "should not return success on existing user", email: "otto@ffrl.de", assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
-			assertFails(t, res, "User already exists", err)
-		}},
-		{name: "should return success", email: "hans@wurst.de", assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
-			assertReturnsSuccess(t, res, err)
-		}},
+		{
+			name:  "should add user",
+			email: "hans@wurst.de",
+			assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
+				assertAddedUserExists(t, db, err)
+			},
+		},
+		{
+			name:  "should not return success on existing user",
+			email: "otto@ffrl.de",
+			assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
+				assertFails(t, res, "User already exists", err)
+			},
+		},
+		{
+			name:  "should return success",
+			email: "hans@wurst.de",
+			assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
+				assertReturnsSuccess(t, res, err)
+			},
+		},
 	}
 
 	for _, tc := range testCases {
@@ -91,15 +103,27 @@ func TestAddOrg(t *testing.T) {
 		shortName string
 		assertion func(*pb.GenericResponse, *database.Connection, error, *testing.T)
 	}{
-		{name: "should add org", shortName: "ffneu", assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
-			assertAddedOrgExists(te, db)
-		}},
-		{name: "should return success", shortName: "ffneu", assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
-			assertReturnsSuccess(te, res, err)
-		}},
-		{name: "should fail if org short name exists", shortName: "fftest", assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
-			assertFails(te, res, "Org already exists", err)
-		}},
+		{
+			name:      "should add org",
+			shortName: "ffneu",
+			assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
+				assertAddedOrgExists(te, db)
+			},
+		},
+		{
+			name:      "should return success",
+			shortName: "ffneu",
+			assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
+				assertReturnsSuccess(te, res, err)
+			},
+		},
+		{
+			name:      "should fail if org short name exists",
+			shortName: "fftest",
+			assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
+				assertFails(te, res, "Org already exists", err)
+			},
+		},
 	}
 
 	for _, tc := range testCases {
@@ -140,18 +164,38 @@ func TestAddASN(t *testing.T) {
 		org       string
 		assertion func(*pb.GenericResponse, *database.Connection, error, *testing.T)
 	}{
-		{name: "should add ASN", asn: 12345, org: "fftest", assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
-			assertAddedASNExists(te, db)
-		}},
-		{name: "should return success", asn: 12345, org: "fftest", assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
-			assertReturnsSuccess(te, res, err)
-		}},
-		{name: "should fail if checked asn exists", asn: 201701, org: "fftest", assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
-			assertFails(te, res, "ASN already exists", err)
-		}},
-		{name: "should fail if org does not exist", asn: 12345, org: "ffuntest", assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
-			assertErrorNotNil(te, err)
-		}},
+		{
+			name: "should add ASN",
+			asn:  12345,
+			org:  "fftest",
+			assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
+				assertAddedASNExists(te, db)
+			},
+		},
+		{
+			name: "should return success",
+			asn:  12345,
+			org:  "fftest",
+			assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
+				assertReturnsSuccess(te, res, err)
+			},
+		},
+		{
+			name: "should fail if checked asn exists",
+			asn:  201701,
+			org:  "fftest",
+			assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
+				assertFails(te, res, "ASN already exists", err)
+			},
+		},
+		{
+			name: "should fail if org does not exist",
+			asn:  12345,
+			org:  "ffuntest",
+			assertion: func(res *pb.GenericResponse, db *database.Connection, err error, te *testing.T) {
+				assertErrorNotNil(te, err)
+			},
+		},
 	}
 
 	for _, tc := range testCases {
@@ -180,5 +224,5 @@ func assertAddedASNExists(t *testing.T, db *database.Connection) {
 	}
 
 	assert.NotNil(t, a, "ASN should not be nil")
-	//assert.NotNil(t, a.Org, "Org should be not nil")
+	assert.NotNil(t, a.Org, "Org should be not nil")
 }
