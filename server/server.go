@@ -16,11 +16,13 @@ type Server struct {
 
 // New creates a new API server instance
 func New(db *database.Connection) *grpc.Server {
-	a := &Server{db}
+	a := WithLogging(db, &Server{db})
 	auth := auth{db}
+
 	s := grpc.NewServer(grpc.StreamInterceptor(auth.streamInterceptor), grpc.UnaryInterceptor(auth.unaryInterceptor))
 	pb.RegisterGrubenlampeServer(s, a)
 	reflection.Register(s)
+
 	return s
 }
 
