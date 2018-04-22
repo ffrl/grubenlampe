@@ -8,7 +8,7 @@ type TunnelDataAccess struct {
 }
 
 func (t *TunnelDataAccess) GetTunnelsByAddress(address string) (ret []*Tunnel, err error) {
-	err = t.conn.db.Where("WHERE address = ?", address).Find(ret).Error
+	err = t.conn.db.Where("address = ?", address).Find(ret).Error
 	if err != nil {
 		return nil, fmt.Errorf("Unable to get data: %v", err)
 	}

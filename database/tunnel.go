@@ -9,11 +9,11 @@ type Tunnel struct {
 	// ASN identifies the ASN requesting the tunnel
 	ASN *ASN `gorm:"foreignkey:ASNID"`
 
-	// Router is the identification string for a router
-	Router string
-
 	// ASNID is the foreign key to an ASN
 	ASNID uint
+
+	// Router is the identification string for a router
+	Router string
 
 	// Address is the IP of the GRE endpoint (organisation site)
 	Address string
