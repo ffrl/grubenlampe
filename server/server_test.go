@@ -225,4 +225,5 @@ func assertAddedASNExists(t *testing.T, db *database.Connection) {
 
 	assert.NotNil(t, a, "ASN should not be nil")
 	assert.NotNil(t, a.Org, "Org should be not nil")
+	assert.EqualValues(t, a.Org.ID, 1, "org_id")
 }

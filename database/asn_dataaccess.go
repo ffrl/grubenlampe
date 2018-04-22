@@ -8,7 +8,10 @@ type ASNDataAccess struct {
 // GetByNumber retrieves the ASN for a number
 func (d *ASNDataAccess) GetByNumber(asn uint32) (*ASN, error) {
 	a := &ASN{}
-	err := d.conn.db.First(&a, "asn = ?", asn).Error
+	err := d.conn.db.Preload("Org").First(&a, "asn = ?", asn).Error
+	if err != nil {
+		return nil, err
+	}
 
 	return a, err
 }
