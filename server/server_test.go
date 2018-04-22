@@ -94,7 +94,7 @@ func assertAddedUserExists(t *testing.T, db *database.Connection, err error) {
 	assert.NotNil(t, u, "user should not be nil")
 	assert.EqualValues(t, "hans@wurst.de", u.Email, "email")
 	assert.EqualValues(t, "passwort", u.Password, "password")
-	assert.EqualValues(t, "xxx", u.RIPEHandle, "ripe-handle")
+	assert.EqualValues(t, "xxx", u.RIPEHandle, "ripe_handle")
 }
 
 func TestAddOrg(t *testing.T) {
@@ -154,7 +154,7 @@ func assertAddedOrgExists(t *testing.T, db *database.Connection) {
 
 	assert.NotNil(t, o, "org should not be nil")
 	assert.EqualValues(t, "Freifunk Test", o.Name, "name")
-	assert.EqualValues(t, "ffneu", o.ShortName, "short-name")
+	assert.EqualValues(t, "ffneu", o.ShortName, "short_name")
 }
 
 func TestAddASN(t *testing.T) {
@@ -226,4 +226,5 @@ func assertAddedASNExists(t *testing.T, db *database.Connection) {
 	assert.NotNil(t, a, "ASN should not be nil")
 	assert.NotNil(t, a.Org, "Org should be not nil")
 	assert.EqualValues(t, a.Org.ID, 1, "org_id")
+	assert.Nil(t, a.CheckedBy, "checked_by")
 }
