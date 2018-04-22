@@ -9,12 +9,14 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
+type ctxUserKey struct{}
+
 type auth struct {
 	db *database.Connection
 }
 
 func (a *auth) streamInterceptor(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
-	if err := a.authorize(stream.Context()); err != nil {
+	if _, err := a.authorize(stream.Context()); err != nil {
 		return err
 	}
 
@@ -22,31 +24,32 @@ func (a *auth) streamInterceptor(srv interface{}, stream grpc.ServerStream, info
 }
 
 func (a *auth) unaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-	if err := a.authorize(ctx); err != nil {
+	var err error
+	if ctx, err = a.authorize(ctx); err != nil {
 		return nil, err
 	}
 
 	return handler(ctx, req)
 }
 
-func (a *auth) authorize(ctx context.Context) error {
+func (a *auth) authorize(ctx context.Context) (context.Context, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
-		return grpc.Errorf(codes.Unauthenticated, "missing context metadata")
+		return ctx, grpc.Errorf(codes.Unauthenticated, "missing context metadata")
 	}
 
 	if len(md["username"]) == 0 || len(md["password"]) == 0 {
-		return grpc.Errorf(codes.Unauthenticated, "username and password required")
+		return ctx, grpc.Errorf(codes.Unauthenticated, "username and password required")
 	}
 
-	res, err := a.db.Users().GetByCredentials(md["username"][0], md["password"][0])
+	user, err := a.db.Users().GetByCredentials(md["username"][0], md["password"][0])
 	if err != nil {
-		return grpc.Errorf(codes.Internal, "error while authenticating")
+		return ctx, grpc.Errorf(codes.Internal, "error while authenticating")
 	}
 
-	if res == nil {
-		return grpc.Errorf(codes.Unauthenticated, "access denied")
+	if user == nil {
+		return ctx, grpc.Errorf(codes.Unauthenticated, "access denied")
 	}
 
-	return nil
+	return context.WithValue(ctx, ctxUserKey{}, user), nil
 }

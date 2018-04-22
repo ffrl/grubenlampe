@@ -21,3 +21,13 @@ type User struct {
 	// Orgs is the list of organisations an user is assinged to
 	Orgs []*Org `gorm:"many2many:user_org"`
 }
+
+// HasOrg checks if a user belongs to ordID Org
+func (u *User) HasOrg(orgID uint) bool {
+	for _, org := range u.Orgs {
+		if org.ID == orgID {
+			return true
+		}
+	}
+	return false
+}
