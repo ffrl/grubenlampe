@@ -185,6 +185,7 @@ func (s *Server) GetLogs(context.Context, *pb.GetLogsRequest) (*pb.GetLogsRespon
 	return nil, nil
 }
 
+// GetTunnels retrieves tunnels for an org
 func (s *Server) GetTunnels(context.Context, *pb.GetTunnelsRequest) (*pb.GetTunnelsResponse, error) {
 	return nil, nil
 }
