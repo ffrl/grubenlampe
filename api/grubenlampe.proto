@@ -10,12 +10,13 @@ service Grubenlampe {
     rpc AddASN(AddASNRequest) returns (GenericResponse) {}
     rpc AddTunnel(AddTunnelRequest) returns (GenericResponse) {}
     rpc DeleteTunnel(DeleteTunnelRequest) returns (GenericResponse) {}
+    rpc GetTunnels(GetTunnelsRequest) returns (GetTunnelsResponse) {}
     rpc AddIPv4Address(AddIPv4AddressRequest) returns (AddIPv4AddressResponse) {}
     rpc ReleaseIPv4Address(ReleaseIPv4AddressRequest) returns (GenericResponse) {}
-    rpc AddIPv6Prefix(AddIPv6PrefixRequest) returns (AddIPv6PrefixReply) {}
+    rpc AddIPv6Prefix(AddIPv6PrefixRequest) returns (AddIPv6PrefixResponse) {}
     rpc ReleaseIPv6Prefix(ReleaseIPv6PrefixRequest) returns (GenericResponse) {}
-    rpc GetBGPStatus(GetBGPStatusRequest) returns (GetBGPStatusReply) {}
-    rpc GetLogs(GetLogsRequest) returns (GetLogsReply) {}
+    rpc GetBGPStatus(GetBGPStatusRequest) returns (GetBGPStatusResponse) {}
+    rpc GetLogs(GetLogsRequest) returns (GetLogsResponse) {}
 }
 
 message GenericRequest {
@@ -52,6 +53,26 @@ message DeleteTunnelRequest {
     string address = 1;
 }
 
+message GetTunnelsRequest {
+    uint32 asn = 1;
+}
+
+message GetTunnelsResponse {
+    repeated Tunnel tunnels = 1;
+}
+
+message Tunnel {
+    string provider_tunnel_address = 1;
+    string customer_tunnel_address = 2;
+    uint32 provider_asn = 3;
+    uint32 customer_asn = 4;
+    string provider_tunnel_inside_address4 = 5;
+    string customer_tunnel_inside_address4 = 6;
+    string provider_tunnel_inside_address6 = 7;
+    string customer_tunnel_inside_address6 = 8;
+    bool provisioned = 9;
+}
+
 message AddIPv4AddressRequest {
     string org_short_name = 1;
 }
@@ -70,7 +91,7 @@ message AddIPv6PrefixRequest {
     string org_short_name = 1;
 }
 
-message AddIPv6PrefixReply {
+message AddIPv6PrefixResponse {
     bool success = 1;
     string message = 2;
     string prefix = 3;
@@ -84,7 +105,7 @@ message GetBGPStatusRequest {
     uint32 asn = 1;
 }
 
-message GetBGPStatusReply {
+message GetBGPStatusResponse {
     bool success = 1;
     string mesage = 2;
     repeated BGPStatus bgp_status = 3;
@@ -100,7 +121,7 @@ message GetLogsRequest {
     string org_short_name = 1;
 }
 
-message GetLogsReply {
+message GetLogsResponse {
     repeated Log logs = 1;
 }
 
