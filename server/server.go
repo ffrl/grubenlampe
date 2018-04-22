@@ -70,16 +70,40 @@ func (s *Server) AddOrg(ctx context.Context, req *pb.AddOrgRequest) (*pb.Generic
 	return &pb.GenericResponse{Success: true}, nil
 }
 
-func (s *Server) AddASN(context.Context, *pb.AddASNRequest) (*pb.GenericResponse, error) {
-	return nil, nil
+func (s *Server) AddASN(ctx context.Context, req *pb.AddASNRequest) (*pb.GenericResponse, error) {
+	orgs := s.db.Orgs()
+	o, err := orgs.GetByShortName(req.OrgShortName)
+	if err != nil {
+		return nil, fmt.Errorf("error while processing")
+	}
+
+	asns := s.db.ASNs()
+	exists, err := asns.CheckedASNExists(req.Asn)
+	if err != nil {
+		return nil, fmt.Errorf("error while processing")
+	}
+	if exists {
+		return &pb.GenericResponse{Message: "ASN already exists"}, nil
+	}
+
+	a := &database.ASN{
+		ASN: req.Asn,
+		Org: o,
+	}
+	err = asns.Save(a)
+	if err != nil {
+		return nil, fmt.Errorf("could not store ASN")
+	}
+
+	return &pb.GenericResponse{Success: true}, nil
 }
 
 func (s *Server) AddTunnel(context.Context, *pb.AddTunnelRequest) (*pb.GenericResponse, error) {
-	return nil, nil
+	return &pb.GenericResponse{Success: false, Message: "not implemented"}, nil
 }
 
 func (s *Server) DeleteTunnel(context.Context, *pb.DeleteTunnelRequest) (*pb.GenericResponse, error) {
-	return nil, nil
+	return &pb.GenericResponse{Success: false, Message: "not implemented"}, nil
 }
 
 func (s *Server) AddIPv4Address(context.Context, *pb.AddIPv4AddressRequest) (*pb.AddIPv4AddressResponse, error) {

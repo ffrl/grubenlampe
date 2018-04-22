@@ -39,6 +39,10 @@ func ConnectTestDatabase(t *testing.T) *TestDatabaseScope {
 		t.Fatalf("could not add fftest org. %s", err)
 	}
 
+	if err := s.addTestASN(); err != nil {
+		t.Fatalf("could not add test ASN. %s", err)
+	}
+
 	return s
 }
 
@@ -66,6 +70,20 @@ func (s *TestDatabaseScope) addTestOrg() error {
 		ShortName: "fftest",
 	}
 	return s.db.Orgs().Save(o)
+}
+
+func (s *TestDatabaseScope) addTestASN() error {
+	o, err := s.db.Orgs().GetByShortName("fftest")
+	if err != nil {
+		return err
+	}
+
+	a := &database.ASN{
+		Org:     o,
+		ASN:     201701,
+		Checked: true,
+	}
+	return s.db.ASNs().Save(a)
 }
 
 func (s *TestDatabaseScope) Close() {
