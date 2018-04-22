@@ -15,11 +15,11 @@ clean:
 
 all:
 	cd cmd/grubenlampe-server && go build -o ../../bin/grubenlamped
-	cd cmd/grubenlampe && go build -o ../../bin/grubenlampe
+	cd cmd/gl && go build -o ../../bin/gl
 
 server:
 	cd cmd/grubenlampe-server && go build -o ../../bin/grubenlamped
 
 client:
-	cd cmd/grubenlampe && go build -o ../../bin/grubenlampe
+	cd cmd/gl && go build -o ../../bin/gl
 
