@@ -15,7 +15,7 @@ type Log struct {
 	// Org is the organisation on which behalv the user requested the action
 	Org *Org `gorm:"foreignkey:OrgID"`
 
-	// OrgID is the foreign key to an orgnaisation
+	// OrgID is the foreign key to an organisation
 	OrgID uint `gorm:"nullable"`
 
 	// Request is the serialized string representation of the request
