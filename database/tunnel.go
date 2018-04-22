@@ -7,7 +7,9 @@ type Tunnel struct {
 	gorm.Model
 
 	// ASN identifies the ASN requesting the tunnel
-	ASN *ASN
+	ASN *ASN `gorm:"foreignkey:ASNID"`
+
+	ASNID uint
 
 	// Address is the IP of the GRE endpoint (organisation site)
 	Address string

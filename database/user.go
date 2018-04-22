@@ -19,5 +19,5 @@ type User struct {
 	RIPEHandle string `gorm:"column:ripe_handle"`
 
 	// Orgs is the list of organisations an user is assinged to
-	Orgs []*Org `gorm:"many2many:user_org;"`
+	Orgs []*Org `gorm:"many2many:user_org"`
 }

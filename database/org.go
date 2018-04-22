@@ -22,7 +22,10 @@ type Org struct {
 	Checked bool
 
 	// CheckedBy is the authoritative user checked the add request
-	CheckedBy *User
+	CheckedBy *User `gorm:"foreignkey:CheckedByUserID"`
+
+	// CheckedByUserID is the foreign key to the organisation checked the record
+	CheckedByUserID uint `gorm:"nullable"`
 
 	// IPv4Quota is the max number of NAT-IPs an organisation can hold
 	IPv4Quota uint8 `gorm:"column:ipv4_quota"`
