@@ -166,7 +166,7 @@ func (s *Server) ReleaseIPv4Address(context.Context, *pb.ReleaseIPv4AddressReque
 }
 
 // AddIPv6Prefix creates an IPv6 /48 prefix
-func (s *Server) AddIPv6Prefix(context.Context, *pb.AddIPv6PrefixRequest) (*pb.AddIPv6PrefixReply, error) {
+func (s *Server) AddIPv6Prefix(context.Context, *pb.AddIPv6PrefixRequest) (*pb.AddIPv6PrefixResponse, error) {
 	return nil, nil
 }
 
@@ -176,11 +176,15 @@ func (s *Server) ReleaseIPv6Prefix(context.Context, *pb.ReleaseIPv6PrefixRequest
 }
 
 // GetBGPStatus gets status of BGP sessions
-func (s *Server) GetBGPStatus(context.Context, *pb.GetBGPStatusRequest) (*pb.GetBGPStatusReply, error) {
+func (s *Server) GetBGPStatus(context.Context, *pb.GetBGPStatusRequest) (*pb.GetBGPStatusResponse, error) {
 	return nil, nil
 }
 
 // GetLogs gets Logs
-func (s *Server) GetLogs(context.Context, *pb.GetLogsRequest) (*pb.GetLogsReply, error) {
+func (s *Server) GetLogs(context.Context, *pb.GetLogsRequest) (*pb.GetLogsResponse, error) {
+	return nil, nil
+}
+
+func (s *Server) GetTunnels(context.Context, *pb.GetTunnelsRequest) (*pb.GetTunnelsResponse, error) {
 	return nil, nil
 }
