@@ -28,7 +28,7 @@ func Connect(driver, dsn string, options ...Option) (*Connection, error) {
 	}
 
 	c := &Connection{
-		db: db,
+		db: db.Set("gorm:auto_preload", true),
 	}
 
 	for _, o := range options {

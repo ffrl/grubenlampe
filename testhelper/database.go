@@ -14,9 +14,10 @@ type TestDatabaseScope struct {
 	t      *testing.T
 }
 
+// ConnectTestDatabase returns a scope with a test database
 func ConnectTestDatabase(t *testing.T) *TestDatabaseScope {
 	file := uuid.New().String() + "-test.db"
-	db, err := database.Connect("sqlite3", file)
+	db, err := database.Connect("sqlite3", file, database.WithDebug())
 	if err != nil {
 		t.Fatalf("could not connect to test database. %s", err)
 	}
