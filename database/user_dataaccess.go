@@ -1,22 +1,20 @@
 package database
 
+import "fmt"
+
 // UserDataAccess provides methods to retrieve and store users
 type UserDataAccess struct {
 	conn *Connection
 }
 
-// Verify verfies user credentials
-func (d *UserDataAccess) Verify(username, password string) (bool, error) {
-	var count int
-	err := d.conn.db.Model(&User{}).
-		Where("email = ? AND password = ?", username, password).
-		Count(&count).
-		Error
+// GetByCredentials gets a user object by a users credentials
+func (d *UserDataAccess) GetByCredentials(username, password string) (user *User, err error) {
+	err = d.conn.db.Where("email = ? AND password = ?", username, password).First(user).Error
 	if err != nil {
-		return false, err
+		return nil, fmt.Errorf("Query failed: %v", err)
 	}
 
-	return count > 0, nil
+	return user, nil
 }
 
 // Save persists an user

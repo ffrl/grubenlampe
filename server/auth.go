@@ -39,12 +39,12 @@ func (a *auth) authorize(ctx context.Context) error {
 		return grpc.Errorf(codes.Unauthenticated, "username and password required")
 	}
 
-	res, err := a.db.Users().Verify(md["username"][0], md["password"][0])
+	res, err := a.db.Users().GetByCredentials(md["username"][0], md["password"][0])
 	if err != nil {
 		return grpc.Errorf(codes.Internal, "error while authenticating")
 	}
 
-	if !res {
+	if res == nil {
 		return grpc.Errorf(codes.Unauthenticated, "access denied")
 	}
 
