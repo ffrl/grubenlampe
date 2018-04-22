@@ -101,8 +101,26 @@ func (s *Server) AddASN(ctx context.Context, req *pb.AddASNRequest) (*pb.Generic
 }
 
 // AddTunnel crates a tunnel
-func (s *Server) AddTunnel(context.Context, *pb.AddTunnelRequest) (*pb.GenericResponse, error) {
-	return &pb.GenericResponse{Success: false, Message: "not implemented"}, nil
+func (s *Server) AddTunnel(ctx context.Context, req *pb.AddTunnelRequest) (*pb.GenericResponse, error) {
+	tunnels, err := s.db.Tunnels().GetTunnelsByAddress(req.Address)
+	if err != nil {
+		return nil, fmt.Errorf("Error while processing: %v", err)
+	}
+
+	if len(tunnels) != 0 {
+		return &pb.GenericResponse{Message: "Tunnel already exists"}, nil
+	}
+
+	asn, err := s.db.ASNs().GetCheckedASN(req.Asn)
+	if err != nil {
+		return nil, fmt.Errorf("Error while processing: %v", err)
+	}
+
+	if asn == nil {
+		return &pb.GenericResponse{Message: "ASN not checked or does not exist"}, nil
+	}
+
+	return &pb.GenericResponse{Success: true}, nil
 }
 
 // DeleteTunnel deletes a tunnel

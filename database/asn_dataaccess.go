@@ -1,5 +1,7 @@
 package database
 
+import "fmt"
+
 // ASNDataAccess provides methods to retrieve and store ASNs
 type ASNDataAccess struct {
 	conn *Connection
@@ -30,4 +32,14 @@ func (d *ASNDataAccess) CheckedASNExists(a uint32) (bool, error) {
 	}
 
 	return count > 0, nil
+}
+
+// GetCheckedASN gets a checked ASN object
+func (d *ASNDataAccess) GetCheckedASN(asn uint32) (res *ASN, err error) {
+	err = d.conn.db.Where("asn = ? AND checked = true", asn).First(res).Error
+	if err != nil {
+		return nil, fmt.Errorf("Unable to get ASN objects: %v", err)
+	}
+
+	return res, nil
 }
